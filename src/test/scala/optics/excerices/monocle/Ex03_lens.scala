@@ -50,13 +50,12 @@ class LensSpec extends Specification with CatsEqMatcher {
     */
   def test04 = {
     val ball: (Pos, MS) = (Pos(X(0), Y(0)), MS(1.0))
-
-    val composed: Lens[Ball, Int] = ???
+    val intX: Lens[X, Int] = Lens[X, Int](_.x)(n => a => a.copy(x = n))
+    val composed: Lens[Ball, Int] = Ball._pos composeLens Pos._x composeLens intX
 
     val (pos, _) = composed.modify(_ + 1)(ball)
 
     pos.x must beEqualTo(X(1))
-
   }
 
 
@@ -71,12 +70,16 @@ class LensSpec extends Specification with CatsEqMatcher {
 
     val ball: (Pos, MS) = (Pos(X(0), Y(3)), MS(1.0))
 
-    val composed: Lens[Ball, Int] = ???
+    val lensBallPos = Lens[(Pos, MS), Pos](_._1)(n => a => a.copy(_1 = n))
+    val lensPosY = Pos._y
+    val intY: Lens[Y, Int] = Lens[Y, Int](_.y)(n => a => a.copy(y = n))
+    val composed: Lens[Ball, Int] = lensBallPos composeLens lensPosY composeLens intY
 
-    val (pos, _) = composed.set(0)(ball)
+    val ball2 = composed.set(1)(ball)
+    ball2._1.y must beEqualTo(Y(1))
 
-    pos.y must beEqualTo(Y(1))
-
+    val (pos2, _) = composed.modify(_ + 2)(ball2)
+    pos2.y must beEqualTo(Y(3))
   }
 
 
