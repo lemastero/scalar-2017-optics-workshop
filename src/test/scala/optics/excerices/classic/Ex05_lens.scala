@@ -22,7 +22,14 @@ class LensSpec extends Specification with CatsEqMatcher {
 
   def test02 = lens.set(100)(ms) must beEqvTo(MS(100))
 
-  def test03 = lens.modify(_ + 30)(ms) must beEqvTo (lens.set(lens.get(ms) + 30)(ms))
+  def test03 = {
+    val s1 = lens.modify(_ + 30)(ms)
+    val s2 = lens.set(lens.get(ms) + 30)(ms)
+    println("\n\nBALL 1 " + ms.toString)
+    println("\n\nBALL 2 " + s1)
+    println("\n\nBALL 3 " + s2)
+    s1 must beEqvTo (s2)
+  }
 
 
   /**
@@ -36,6 +43,9 @@ class LensSpec extends Specification with CatsEqMatcher {
     * Hint: Use the apply method from Lens
     *
     */
-  lazy val lens: Lens[MS, Double] = ???
+  lazy val lens: Lens[MS, Double] = new Lens[MS, Double] {
+    override def get(s: MS): Double = s.v
 
+    override def set(t: Double): MS => MS = ms => ms.copy(v = t)
+  }
 }
