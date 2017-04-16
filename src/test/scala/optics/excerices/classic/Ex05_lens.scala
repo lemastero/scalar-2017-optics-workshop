@@ -25,9 +25,6 @@ class LensSpec extends Specification with CatsEqMatcher {
   def test03 = {
     val s1 = lens.modify(_ + 30)(ms)
     val s2 = lens.set(lens.get(ms) + 30)(ms)
-    println("\n\nBALL 1 " + ms.toString)
-    println("\n\nBALL 2 " + s1)
-    println("\n\nBALL 3 " + s2)
     s1 must beEqvTo (s2)
   }
 

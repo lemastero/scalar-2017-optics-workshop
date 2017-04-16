@@ -46,12 +46,12 @@ class LensCompositionSpec extends Specification with CatsEqMatcher {
     *
     * Define a lens which will 'zoom' inside a ball accessing its velocity.
     */
-  lazy val ballLens: Lens[Ball, MS] = ???
+  lazy val ballLens: Lens[Ball, MS] = Lens[Ball, MS](_.v)( s => ball => ball.copy(v = s))
 
   /**
     * TODO: Implement me!
     *
     * Compose both lenses to zoom deep inside a ball.
     */
-  lazy val composedLens: Lens[Ball, Double] = ???
+  lazy val composedLens: Lens[Ball, Double] = ballLens.composeLens(msLens)
 }
