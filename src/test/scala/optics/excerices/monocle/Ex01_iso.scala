@@ -28,10 +28,9 @@ class IsoSpec extends Specification with CatsEqMatcher {
 
   def test02 = iso.reverseGet(27.78) must beEqvTo(MS(27.78))
 
-  def test03 = iso.modify(_ + 10)(MS(27.78)) must beEqvTo(MS(28.06))
+  def test03 = iso.modify(_ + 10)(MS(27.78)) must beEqvTo(MS(37.78))
 
   def test04 = iso.reverse.modify((ms: MS) => MS(ms.v * 2))(100.0) must beEqualTo(200.0)
 
   lazy val iso: Iso[MS, Double] = GenIso[MS, Double]
-
 }
