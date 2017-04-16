@@ -43,6 +43,9 @@ class PrismSpec extends Specification with CatsEqMatcher {
     * Hint: Use the apply method from Iso
     *
     */
-  lazy val prism: Prism[String, MS] = ???
+  lazy val prism: Prism[String, MS] = new Prism[String, MS] {
+    override def getOption(s: String): Option[MS] = Try(s.toDouble).toOption.map(MS.apply)
 
+    override def reverseGet(t: MS): String = t.v.toString
+  }
 }
