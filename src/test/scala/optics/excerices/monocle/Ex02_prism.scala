@@ -1,6 +1,6 @@
 package optics.excerices.monocle
 
-import monocle.Prism
+import monocle.{Iso, Prism}
 import monocle.macros.GenPrism
 import monocle.macros.Lenses
 import org.specs2.Specification
@@ -32,8 +32,7 @@ class PrismSpec extends Specification {
     */
   def test01 = {
     val probablyJsonString: Json = JsString("Hey, Select me!")
-    Json._jsString.getOption(probablyJsonString) //must beSome or beNone
-    ko("implement me")
+    Json._jsString.getOption(probablyJsonString) must beSome(probablyJsonString)
   }
 
 
@@ -43,8 +42,7 @@ class PrismSpec extends Specification {
     */
   def test02 = {
     val defiantlyNotJsonString: Json = JsNumber(1)
-    Json._jsString.getOption(defiantlyNotJsonString)  //must beSome or beNone
-    ko("implement me")
+    Json._jsString.getOption(defiantlyNotJsonString) must beNone
   }
 
   /**
@@ -54,8 +52,7 @@ class PrismSpec extends Specification {
   def test03 = {
     val maybeJsonNumber: Json = JsNumber(1)
 
-    Json._jsNumber.getOption(maybeJsonNumber) //must beSome or beNone
-    ko("implement me")
+    Json._jsNumber.getOption(maybeJsonNumber) must beSome(1)
   }
 
 
@@ -66,10 +63,11 @@ class PrismSpec extends Specification {
   def test04 = {
     val defiantlyNotJsonNumber: Json = JsString("grrrr")
 
-    Json._jsNumber.getOption(defiantlyNotJsonNumber) //must beSome or beNone
-    ko("implement me")
+    Json._jsNumber.getOption(defiantlyNotJsonNumber) must beNone
   }
 
+
+  private val isoIntDouble = Iso[Int, Double](_.toDouble)(_.toInt)
 
   /**
     * TODO: Implement me!
@@ -79,7 +77,7 @@ class PrismSpec extends Specification {
     */
   def test05 = {
 
-    val composed: Prism[Json, Double] = ???
+    val composed: Prism[Json, Double] = Json._jsNumber.composeIso( isoIntDouble )
 
     composed.getOption(JsNumber(2)) must beSome(2)
   }
@@ -92,7 +90,7 @@ class PrismSpec extends Specification {
     */
   def test06 = {
 
-    val composed: Prism[Json, Double] = ???
+    val composed: Prism[Json, Double] = Json._jsNumber.composeIso( isoIntDouble )
 
     composed.getOption(JsString("grrr")) must beNone
   }
@@ -108,8 +106,6 @@ class PrismSpec extends Specification {
     //It's possible to create prism using partial function rather than Option
     val _jsNumber: Prism[Json, Int] = Prism.partial[Json, Int]{case JsNumber(num) => num}(JsNumber.apply)
   }
-
-
 }
 
 
