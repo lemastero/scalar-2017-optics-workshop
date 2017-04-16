@@ -35,10 +35,5 @@ class IsoSpec extends Specification with CatsEqMatcher {
     *
     * Hint: Use the apply method from Iso
     */
-  lazy val iso: Iso[MS, KMH] = new Iso[MS, KMH] {
-    override def get(s: MS): KMH = KMH(s.v * 3.6)
-
-    override def reverseGet(t: KMH): MS = MS(t.v / 3.6)
-  }
-
+  lazy val iso: Iso[MS, KMH] = Iso[MS, KMH](ms => KMH(ms.v * 3.6))(kms => MS(kms.v / 3.6))
 }
